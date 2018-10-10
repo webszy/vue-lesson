@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Vue计算器</title>
+  <style>
+  p{
+    font-size: 30px;
+    color: red;
+    line-height: 50px;
+    width: 300px;
+  }
+  input{
+    display: block;
+    width: 300px;
+    height: 50px;
+    font-size: 20px;
+    padding-left: 10px;
+  }
+  div{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+  }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <p>税前工资：￥<span>{{unTaxMoney}}</span></p>
+    <input type="number" placeholder="请输入基本工资" v-model="basicMoney"><br>
+    <input type="number" placeholder="请输入岗位工资" v-model="jobMoney"><br>
+    <input type="number" placeholder="请输入绩效工资" v-model="valueMoney">
+  </div>
+</body>
+</html>
+<script src="bower_components/vue/dist/vue.js"></script>
+<script>
+(function(){
+  //基本工资 basicMoney
+  //岗位工资 jobMoney
+  //绩效工资 valueMoney
+  //税前工资 unTaxMoney
+
+  new Vue({
+    el:"#app",
+    data:{
+      basicMoney:0
+    },
+    computed:{
+      jobMoney:function(){
+        return parseFloat(this.basicMoney*3);
+      },
+      valueMoney:function(){
+        return parseFloat(this.basicMoney*0.5);
+      },
+      unTaxMoney:function(){
+        let total=parseFloat(this.basicMoney)+this.jobMoney+this.valueMoney;
+        if(isNaN(total)){
+          return 0;
+        }else{
+          return total;
+        }
+      }
+    }
+  })
+  
+})()
+</script>

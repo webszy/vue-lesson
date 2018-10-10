@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue购物车</title>
+    <style>
+ /*   #box{
+        width:300px;
+        height: 30px;
+        margin: 200px auto;
+        display: none;
+    }*/
+    #box{
+        width: 800px;
+        margin: 200px auto;
+        margin-bottom: 0;
+    }
+    #tab{
+      text-align: center;
+      font-size: 18px;
+      border-collapse: collapse;
+    }
+    #tab tr{
+      height: 60px;
+    }
+    #tab caption{font-size: 26px;}
+    #tab tr:first-child td:nth-child(2){
+        width: 80px;
+    }
+    #tab tr:first-child td:nth-child(3){
+        width: 200px;
+    }
+    #tab tr:first-child td:nth-child(4){
+        width: 100px;
+    }
+    #tab tr:first-child td:nth-child(5){
+        width: 140px;
+    }
+    #tab tr:first-child td:nth-child(6){
+        width: 120px;
+    }
+    #tab tr:first-child td:nth-child(7){
+        width: 80px;
+    }
+    #tab tfoot td:first-child span{
+        color: salmon;
+    }
+    #tab td:nth-child(4) span{
+        margin: 0 2px;
+    }
+    #tb tr:hover{
+        background-color: aquamarine;
+    }
+    input{
+      width: 30px;
+      height: 30px;
+      font-size: 20px;
+      line-height: 30px;
+    }
+    input[type="checkbox"]{
+      width: 20px;
+      height: 20px;
+    }
+    div[v-cloak]{
+        display: none;
+    }
+    </style>
+</head>
+<body>
+    <div id="box" v-cloak>
+      <table cellspacing="0" cellpadding="8px" border="1" id="tab">
+        <caption>SZY的购物车</caption>
+        <thead>
+            <tr>
+                <td>选择</td>
+                <td>商品ID</td>
+                <td>商品名称</td>
+                <td>单价</td>
+                <td>数量</td>
+                <td>小计</td>
+            </tr>
+        </thead>
+        <tbody id="tb">
+        <tr>
+            <td><input type="checkbox" v-on:click="check('phone')"></td>
+            <td>1</td>
+            <td>魅族16plus</td>
+            <td>￥
+                <span>{{phone.price}}</span>
+            </td>
+            <td>
+                <input type="button" value="-"  class="btn" v-on:click="sub('phone' )"/>
+                <span>{{phone.num}}</span>
+                <input type="button" value="+"  class="btn" v-on:click="add('phone' )"/>
+            </td>
+            <td>￥
+                <span>{{parseFloat(phone.num * phone.price)}}</span>
+            </td>
+
+        </tr>
+        <tr>
+            <td><input type="checkbox" v-on:click="check('flow')"></td>
+            <td>2</td>
+            <td>魅族Flow耳机</td>
+            <td>￥
+                <span>{{flow.price}}</span>
+            </td>
+            <td>
+                <input type="button" value="-" class="btn" v-on:click="sub('flow' )"/>
+                <span>{{flow.num}}</span>
+                <input type="button" value="+"  class="btn" v-on:click="add('flow' )"/>
+            </td>
+            <td>￥
+                <span>{{parseFloat(flow.num * flow.price)}}</span>
+            </td>
+        </tr>
+    </tbody>
+        <tfoot id="tf">
+            <tr>
+                <td colspan="7">
+                    合计金额&nbsp;&nbsp;&nbsp;&nbsp;￥<span>{{total()}}</span>
+                </td>
+            </tr>
+    </tfoot>
+    </table>
+    </div>
+
+</body>
+</html>
+<script src="bower_components/vue/dist/vue.js"></script>
+<script>
+(function(){
+  new Vue({
+    el:"#box",
+    data:{
+        phone:{
+          price:3699,
+          num:1,
+          isCheck:false
+        },
+        flow:{
+          price:499,
+          num:1,
+          isCheck:false
+        }
+    },
+    methods:{
+      add:function(name){
+        if(name=="phone"){
+          this.phone.num++;
+          this.total();
+          return this.phone.num;
+        }else{
+          this.flow.num++;
+          this.total();
+          return this.flow.num;
+        }
+      },
+      sub:function(name){
+        if(name=="phone"){
+          this.phone.num--;
+          if(this.phone.num<=1){
+            this.phone.num=1;
+          }
+          this.total();
+          return this.phone.num;
+        }else{
+          this.flow.num--;
+          if(this.flow.num<=1){
+             this.flow.num=1;
+          }
+          this.total();
+          return this.flow.num;
+        }      
+      },
+      total:function(){
+        let phonesum=this.phone.isCheck? parseFloat(this.phone.num * this.phone.price):0;
+        let flowsum=this.flow.isCheck? parseFloat(this.flow.num * this.flow.price):0;
+        console.log(phonesum,flowsum)
+        return phonesum+flowsum
+      },
+      check:function(name){
+        if(name=="phone"){
+          this.phone.isCheck=!this.phone.isCheck;
+        }else{
+          this.flow.isCheck=!this.flow.isCheck;
+        }
+        this.total();
+      }
+    }
+  })
+})()
+</script>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Vue自定义指令之元素拖动</title>
+  <style>
+  #wrap div{
+    width: 300px;
+    height: 300px;
+    color: white;
+  }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div v-drag v-gray>{{msg}}</div>
+  </div>
+</body>
+</html>
+<script src="bower_components/vue/dist/vue.js"></script>
+<script>
+(function(){
+  // 全局自定义标签
+  Vue.directive('drag', {
+    inserted: function (el) {
+      el.onmousedown=function(e){
+        el.style.position="absolute"
+        let startX=e.clientX-el.offsetLeft;
+        let startY=e.clientY-el.offsetTop;
+        document.onmousemove=function(e){
+          let endX=e.clientX-startX
+          let endY=e.clientY-startY
+          el.style.left=endX+"px"
+          el.style.top=endY+"px"
+        }
+
+        document.onmouseup=function(){
+          document.onmousemove=null;
+          document.onmouseup=null;
+        }
+      }
+    }
+  })
+  new Vue({
+    el:"#wrap",
+    data:{
+      msg:"123"
+    },
+    directives:{
+      gray:{
+        inserted:function(el){
+          el.style.backgroundColor="#333"
+        }
+      }
+    }
+  })
+
+})()
+</script>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Vue省市区联动</title>
+  <style>
+    div{
+      font-size: 30px;
+      margin: 100px 100px;
+    }
+  select{
+    width: 100px;
+    height: 37px;
+    line-height: 37px;
+    font-size: 20px;
+  }
+  [v-cloak]{
+    display: none;
+  }
+  </style>
+</head>
+<body>
+  <div id="wrap" v-cloak>
+    省
+    <select v-model="selected.sheng">
+      <option v-for="(n,i) in cities['86']" :value="i" >{{n}}</option>
+    </select>
+    市
+    <select v-model="selected.shi">
+        <option v-for="(n,i) in cities[selected.sheng]" :value="i" >{{n}}</option>
+    </select>
+    区
+    <select v-model="selected.qu">
+        <option v-for="(n,i) in cities[selected.shi]" :value="i" >{{n}}</option>
+    </select>
+    <hr>
+    {{selected}}
+  </div>
+</body>
+</html>
+<script src="bower_components/vue/dist/vue.js"></script>
+<script>
+
+(function(){
+  new Vue({
+    el:"#wrap",
+    data:{
+      cities:"",
+      selected:{
+        sheng:"",
+        shi:"",
+        qu:""
+      }
+    },
+    methods:{
+     
+    },
+    beforeMount() {
+      fetch("json/CityName.json").then(Response=>{
+          Response.json().then(data=>{
+            if(Response.ok){
+              console.log(data)
+              this.cities=data
+            }
+          })
+    })
+    }
+  })
+})()
+</script>

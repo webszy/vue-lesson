@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>tab选项卡</title>
+  <style>
+  div{
+    position: absolute;
+    left:50%;
+    top:50%;
+    transform: translate(-50%,-50%);
+  }
+  ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+  }
+
+  div ul:first-child{
+    width: 400px;
+    height: 50px;
+    line-height: 50px;
+    cursor: pointer;
+    background: #333;
+  }
+  div ul:first-child li{
+    float: left;
+    width: 99px;
+    color: aliceblue;
+    font-size: 20px;
+    border-right: 1px solid white;
+    
+  }
+  div ul:last-child{
+    background: salmon;
+    text-align: center;
+    overflow: hidden;
+    width: 398px;
+    height: 300px;
+  }
+  div ul:last-child li{
+    width: 398px;
+    float: left;
+    font-size: 100px;
+    line-height: 300px;
+    color: white;
+  }
+  .clicked{
+    background-color: aqua;
+  }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <ul>
+      <li  @click="sid=0" :class="sid ==0 ? 'clicked' : '' " >a</li>
+      <li  @click="sid=1" :class="sid ==1 ? 'clicked' : '' ">b</li>
+      <li  @click="sid=2" :class="sid ==2 ? 'clicked' : '' ">c</li>
+      <li  @click="sid=3" :class="sid ==3 ? 'clicked' : '' ">d</li>
+    </ul>
+    <ul>
+      <li v-show="sid==0">a</li>
+      <li v-show="sid==1">b</li>
+      <li v-show="sid==2">c</li>
+      <li v-show="sid==3">d</li>
+    </ul>
+  </div>
+
+</body>
+</html>
+<script src="bower_components/vue/dist/vue.js"></script>
+<script>
+(function(){
+  new Vue({
+    el:"#app",
+    data:{
+      sid:0
+    }
+  })
+})()
+
+</script>
