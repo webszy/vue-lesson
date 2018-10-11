@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="images/cart2/ionic/css/ionic.css">
+    <title>Vue移动端购物车</title>
+    <style>
+        .box span{
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            background-color: gainsboro;
+            font-weight: bold;
+        }
+
+        .box span input{
+
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            border:1px solid grey;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <header class="bar bar-header bar-assertive">
+        <span class="title">购物车</span>
+    </header>
+
+    <header class="bar bar-subheader bar-dark">
+        <span class="title">商品数量：{{totalNum}} 总金额: {{totalMoney}}</span>
+    </header>
+    <section class="content scroll-content overflow-scroll has-header has-footer has-subheader">
+        <ul class="list">
+            <li v-for="(n,index) in goodsList" class="item item-thumbnail-left"  >
+                <img :src="n.pic" />
+                <h3>{{n.title}}</h3>
+                <p>单价: {{n.price}}</p>
+                <p class="box">数量:
+                    <span @click="subNum(index)">-</span>
+                    <span><input type="number" v-model="n.qal"></span>
+                    <span @click="addNum(index)">+</span>
+                </p>
+            </li>
+
+        </ul>
+    </section>
+    <footer class="tabs tabs-dark tabs-icon-top">
+        <div class="tab-item">
+            <i class="icon ion-ios-home"></i>
+            首页
+        </div>
+        <div class="tab-item">
+            <i class="icon ion-ios-home"></i>
+            首页
+        </div>
+        <div class="tab-item">
+            <i class="icon ion-ios-home"></i>
+            首页
+        </div>
+        <div class="tab-item has-badge">
+            <i class="badge badge-assertive">{{totalNum}}</i>
+            <i class="icon ion-ios-home"></i>
+            购物车
+        </div>
+        <div class="tab-item">
+            <i class="icon ion-ios-home"></i>
+            首页
+        </div>
+    </footer>
+
+</div>
+</body>
+</html>
+<script src="js/vue.js"></script>
+<script>
+(function() {
+  let actionURL="http://localhost:3000/api/cart2"
+  new Vue({
+    el:"#app",
+    data:{
+      goodsList:[],
+      totalNum:0,
+      totalMoney:0
+    },
+    methods: {
+      _sumTotal:function(){
+        this.totalMoney=0;
+        this.totalNum=0;
+        this.goodsList.forEach(element => {
+          this.totalNum+=element.qal;
+          this.totalMoney+=element.qal*element.price;
+        });
+      },
+      addNum:function(i){
+        this.goodsList[i].qal++
+        this. _sumTotal()
+      },
+      subNum:function(i){
+
+        if(this.goodsList[i].qal<=1){
+          this.goodsList[i].qal=1
+        }else{
+          this.goodsList[i].qal--
+        }
+        this. _sumTotal()
+      }
+    },
+    created () {
+      fetch(actionURL).then(Response=>{
+        Response.json().then(data=>{
+          this.goodsList=data;
+          this._sumTotal();
+        })
+      })
+      
+    }
+
+  })
+})()
+</script>

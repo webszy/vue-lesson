@@ -1,72 +1,112 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Vue省市区联动</title>
   <style>
-    div{
+    div {
       font-size: 30px;
       margin: 100px 100px;
     }
-  select{
-    width: 100px;
-    height: 37px;
-    line-height: 37px;
-    font-size: 20px;
-  }
-  [v-cloak]{
-    display: none;
-  }
+
+    select {
+      width: 100px;
+      height: 37px;
+      line-height: 37px;
+      font-size: 20px;
+    }
+
+    [v-cloak] {
+      display: none;
+    }
   </style>
 </head>
+
 <body>
   <div id="wrap" v-cloak>
     省
-    <select v-model="selected.sheng">
-      <option v-for="(n,i) in cities['86']" :value="i" >{{n}}</option>
+    <select v-model="selected.sheng" >
+      <option v-for="(n,i) in cities['86']" :value="i">{{n}}</option>
     </select>
     市
     <select v-model="selected.shi">
-        <option v-for="(n,i) in cities[selected.sheng]" :value="i" >{{n}}</option>
+      <option v-for="(n,i) in cities[selected.sheng]" :value="i">{{n}}</option>
     </select>
     区
     <select v-model="selected.qu">
-        <option v-for="(n,i) in cities[selected.shi]" :value="i" >{{n}}</option>
+      <option v-for="(n,i) in cities[selected.shi]" :value="i">{{n}}</option>
     </select>
     <hr>
     {{selected}}
+
   </div>
 </body>
+
 </html>
 <script src="js/vue.js"></script>
+<script src="js/axios.js"></script>
 <script>
-
-(function(){
-  new Vue({
-    el:"#wrap",
-    data:{
-      cities:"",
-      selected:{
-        sheng:"",
-        shi:"",
-        qu:""
-      }
-    },
-    methods:{
-     
-    },
-    beforeMount() {
-      fetch("json/CityName.json").then(Response=>{
-          Response.json().then(data=>{
-            if(Response.ok){
-              console.log(data)
-              this.cities=data
+  //方法一：通过fetch或axios获取json数据
+  (function () {
+    new Vue({
+      el: "#wrap",
+      data: {
+        cities: "",
+        selected:{
+          sheng:'',
+          shi:'',
+          qu:''
+        }
+      },
+      watch: {
+        sheng(newVal,oldVal){
+          // console.log("newVal",newVal,oldVal)
+          let obj=this.cities[newVal];
+          for(let i in obj){
+            this.shi=i;
+            break
+          }
+          let obj2=this.cities[this.shi]
+          for(let i in obj2){
+            this.qu=i;
+            break
+          }
+        },
+        selected:{
+          handler(newVal,oldVal){
+            // console.log(newVal,oldVal)
+            let obj=this.cities[newVal.sheng];
+            for(let i in obj){
+              this.selected.shi=i;
+              break
             }
-          })
+             obj=this.cities[newVal.shi];
+            for(let i in obj){
+              this.selected.qu=i;
+              break
+            }
+          },
+          deep:true
+        }
+      },
+      beforeMount: function () {
+        // console.log("a");
+        // axios.get("json/CityName.json").then(response => {
+        //   console.log(response.data);
+        //   this.cities = response.data;
+        // })
+        fetch("json/CityName.json").then(Response => {
+          Response.json().then(data => {
+              if (Response.ok) {
+                // console.log(data)
+                this.cities = data
+              }
+            })
+        })
+      }
     })
-    }
-  })
-})()
+  })()
 </script>

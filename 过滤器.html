@@ -7,6 +7,30 @@
   <title>Vue过滤器</title>
 </head>
 <body>
-  
+  <div id="app">
+      {{formatMoney }}
+    {{ money | formatMoney }}
+  </div>
 </body>
 </html>
+<script src="js/vue.js"></script>
+<script>
+(function(){
+
+  Vue.filter("formatMoney",function (val) {
+             return val+"元"
+  })
+
+  new Vue({
+    el:"#app",
+    data:{
+      money:100
+    } ,
+    computed:{
+      formatMoney (){
+          return this.money+"元"
+      }
+    }
+  })
+})()
+</script>
