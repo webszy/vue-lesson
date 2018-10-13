@@ -1,12 +1,12 @@
-const express=require("express");
-const path=require("path");
-const data=require("../json/dataForCart2.json");
+const express=require("express")
+const path=require("path")
+const data=require("../json/dataForCart2.json")
 
-const app=express();
-let itemPath=path.resolve(__dirname,"../");
+const app=express()
+let itemPath=path.resolve(__dirname,"../")
 
 app.listen(3000,()=>{
-  console.log("server onReady port is 3000");
+  console.log("server onReady port is 3000")
 });
 
 //设置静态目录
